@@ -21,6 +21,7 @@ struct EditorView: View {
     
     @State private var content: String = ""
     @State private var isSaving: Bool = false
+    @State private var saveError: Bool = false
     @State private var saveTask: Task<Void, Never>?
     
     var body: some View {
@@ -42,7 +43,41 @@ struct EditorView: View {
                     .padding(.top, 16)
                     .padding(.bottom, 100)
             }
+            
+            // Save Error Alert
+            if saveError {
+                VStack {
+                    Spacer()
+                    HStack {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundColor(.orange)
+                        Text("Unable to save. Please try again.")
+                            .font(.subheadline.weight(.medium))
+                            .foregroundColor(.ink)
+                        Spacer()
+                        Button("Retry") {
+                            saveError = false
+                            saveNote()
+                        }
+                        .font(.subheadline.weight(.bold))
+                        .foregroundColor(.blue)
+                    }
+                    .padding(16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.orange.opacity(0.1))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.orange.opacity(0.2), lineWidth: 1)
+                            )
+                    )
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 120)
+                }
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
         }
+        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: saveError)
         .onAppear {
             content = initialContent
         }
@@ -106,6 +141,7 @@ struct EditorView: View {
         guard !content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || !isNew else { return }
         
         isSaving = true
+        saveError = false
         
         if let noteId = noteId {
             // Update existing note
@@ -127,7 +163,8 @@ struct EditorView: View {
         do {
             try modelContext.save()
         } catch {
-            print("Error saving note: \(error)")
+            // Show error indicator to user
+            saveError = true
         }
         
         isSaving = false

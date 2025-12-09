@@ -14,6 +14,7 @@ struct NewNotebookModal: View {
     var userId: UUID
     
     @State private var notebookName: String = ""
+    @State private var errorMessage: String = ""
     @FocusState private var isNameFocused: Bool
     
     var body: some View {
@@ -42,6 +43,12 @@ struct NewNotebookModal: View {
                     )
                     .focused($isNameFocused)
                     .onSubmit(createNotebook)
+                
+                if !errorMessage.isEmpty {
+                    Text(errorMessage)
+                        .font(.caption.weight(.medium))
+                        .foregroundColor(.red)
+                }
                 
                 HStack(spacing: 12) {
                     Button(action: { viewModel.isNotebookModalOpen = false }) {
@@ -90,6 +97,8 @@ struct NewNotebookModal: View {
     private func createNotebook() {
         guard !notebookName.trimmingCharacters(in: .whitespaces).isEmpty else { return }
         
+        errorMessage = ""
+        
         let notebook = Notebook(
             userId: userId,
             name: notebookName
@@ -102,7 +111,8 @@ struct NewNotebookModal: View {
             notebookName = ""
             viewModel.isNotebookModalOpen = false
         } catch {
-            print("Error creating notebook: \(error)")
+            // Provide user feedback for save failure
+            errorMessage = "Unable to create notebook. Please try again."
         }
     }
 }

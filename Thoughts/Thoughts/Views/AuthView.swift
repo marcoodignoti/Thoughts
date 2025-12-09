@@ -192,7 +192,8 @@ struct AuthView: View {
             try modelContext.save()
             viewModel.login(user: newUser)
         } catch {
-            errorMessage = "An error occurred. Please try again."
+            // Provide user feedback for save failure
+            errorMessage = "Unable to create account. Please try again."
         }
     }
 }

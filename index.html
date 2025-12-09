@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover" />
+    <title>thoughts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              mono: ['"Courier Prime"', 'monospace'],
+            },
+            colors: {
+              paper: '#FDFBF7',
+              ink: '#2C2C2C',
+              glass: {
+                border: 'rgba(255, 255, 255, 0.4)',
+                surface: 'rgba(255, 255, 255, 0.65)',
+                highlight: 'rgba(255, 255, 255, 0.2)',
+              }
+            },
+            boxShadow: {
+              'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+              'glass-pressed': '0 4px 16px 0 rgba(31, 38, 135, 0.05)',
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      /* Hide scrollbar for cleaner mobile look but allow scrolling */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      /* Prevent elastic scrolling on body to keep native feel */
+      body {
+        overscroll-behavior-y: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "dexie": "https://unpkg.com/dexie@4.0.1/dist/modern/dexie.mjs",
+    "dexie-react-hooks": "https://aistudiocdn.com/dexie-react-hooks@^4.2.0",
+    "framer-motion": "https://aistudiocdn.com/framer-motion@^11.0.8"
+  }
+}
+</script>
+</head>
+  <body class="bg-paper text-ink antialiased select-none">
+    <div id="root"></div>
+  </body>
+</html>

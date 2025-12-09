@@ -1,20 +1,77 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Thoughts
 
-# Run and deploy your AI Studio app
+A minimalist, typewriter-styled note-taking app for iOS with a Liquid Glass aesthetic for capturing thoughts and organizing notebooks.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/drive/1QR5UfAFEuTRVGWMR4w0YBTec5lmoceCs
+- 📝 **Quick Notes**: Capture your thoughts instantly with auto-save functionality
+- 📚 **Notebooks**: Organize your thoughts into custom notebooks
+- 🔍 **Search**: Find any thought quickly with full-text search
+- 🎨 **Liquid Glass Design**: Beautiful translucent UI with smooth animations
+- 💾 **Local Storage**: All data stored securely on-device using SwiftData
+- 🔐 **User Authentication**: Create an account to keep your thoughts private
 
-## Run Locally
+## Requirements
 
-**Prerequisites:**  Node.js
+- iOS 17.0+
+- Xcode 15.0+
+- Swift 5.9+
 
+## Getting Started
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### Open in Xcode
+
+1. Open the `Thoughts/Thoughts.xcodeproj` file in Xcode
+2. Select your target device (iPhone or iPad Simulator)
+3. Build and run the project (⌘+R)
+
+### Project Structure
+
+```
+Thoughts/
+├── Thoughts.xcodeproj/          # Xcode project file
+└── Thoughts/
+    ├── ThoughtsApp.swift        # App entry point
+    ├── ContentView.swift        # Main content view
+    ├── Models/
+    │   ├── Note.swift           # Note data model
+    │   ├── Notebook.swift       # Notebook data model
+    │   └── User.swift           # User data model
+    ├── ViewModels/
+    │   └── AppViewModel.swift   # App state management
+    ├── Views/
+    │   ├── OnboardingView.swift # Onboarding flow
+    │   ├── AuthView.swift       # Login/Register screen
+    │   ├── HomeView.swift       # Main home screen
+    │   ├── NotebookDetailView.swift
+    │   ├── EditorView.swift     # Note editor
+    │   ├── SearchOverlay.swift  # Search functionality
+    │   ├── SettingsModal.swift  # Settings screen
+    │   └── NewNotebookModal.swift
+    ├── Components/
+    │   ├── NoteCard.swift       # Note card component
+    │   ├── NotebookCard.swift   # Notebook card component
+    │   ├── BottomBar.swift      # Navigation bar
+    │   ├── FloatingActionButton.swift
+    │   └── Color+Extensions.swift
+    └── Assets.xcassets/         # App icons and colors
+```
+
+## Technologies
+
+- **SwiftUI**: Modern declarative UI framework
+- **SwiftData**: Apple's persistence framework for data storage
+- **Swift Observation**: For reactive state management
+
+## Design Philosophy
+
+The app follows the "Liquid Glass" design philosophy:
+- High blur effects with translucent backgrounds
+- Subtle borders for depth and light refraction
+- Spring animations for natural interactions
+- Minimum 44pt touch targets for accessibility
+- Paper-like background with ink-colored text
+
+## License
+
+This project is available for personal use.

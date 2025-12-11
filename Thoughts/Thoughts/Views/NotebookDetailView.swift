@@ -15,7 +15,8 @@ struct NotebookDetailView: View {
     var notes: [Note]
     
     private var sortedNotes: [Note] {
-        notes.sorted { $0.updatedAt > $1.updatedAt }
+        // Notes are already sorted by the Query in ContentView
+        notes
     }
     
     var body: some View {

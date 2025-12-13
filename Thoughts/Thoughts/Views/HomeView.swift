@@ -14,10 +14,15 @@ struct HomeView: View {
     var notes: [Note]
     var notebooks: [Notebook]
     
-    private var currentDate: String {
+    // Cache the DateFormatter to avoid expensive initialization on every render
+    private static let homeDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE, MMMM d"
-        return formatter.string(from: Date())
+        return formatter
+    }()
+
+    private var currentDate: String {
+        return Self.homeDateFormatter.string(from: Date())
     }
     
     private var recentNotes: [Note] {

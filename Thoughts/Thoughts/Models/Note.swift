@@ -17,6 +17,13 @@ final class Note {
     var createdAt: Date
     var updatedAt: Date
     
+    // Cache the DateFormatter to avoid expensive initialization on every access
+    private static let noteDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d, h:mm a"
+        return formatter
+    }()
+
     init(
         id: UUID = UUID(),
         userId: UUID,
@@ -41,8 +48,6 @@ final class Note {
     }
     
     var formattedDate: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d, h:mm a"
-        return formatter.string(from: updatedAt)
+        return Self.noteDateFormatter.string(from: updatedAt)
     }
 }

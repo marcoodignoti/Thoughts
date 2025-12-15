@@ -34,6 +34,7 @@ struct FloatingActionButton: View {
                     .foregroundColor(.paper)
             }
         }
+        .accessibilityLabel("Create new note")
         .buttonStyle(ScaleButtonStyle())
     }
 }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import CryptoKit
 
 struct AuthView: View {
     @Environment(\.modelContext) private var modelContext
@@ -164,8 +165,22 @@ struct AuthView: View {
     }
     
     private func performLogin() {
-        if let user = users.first(where: { $0.email == email && $0.passwordHash == password }) {
-            viewModel.login(user: user)
+        let hashedPassword = hash(password)
+
+        // Find user by email
+        if let user = users.first(where: { $0.email == email }) {
+            // Check hashed password (secure)
+            if user.passwordHash == hashedPassword {
+                viewModel.login(user: user)
+            }
+            // Check plaintext password (migration for existing users)
+            else if user.passwordHash == password {
+                user.passwordHash = hashedPassword
+                try? modelContext.save()
+                viewModel.login(user: user)
+            } else {
+                errorMessage = "Invalid credentials"
+            }
         } else {
             errorMessage = "Invalid credentials"
         }
@@ -182,7 +197,7 @@ struct AuthView: View {
         
         let newUser = User(
             email: email,
-            passwordHash: password,
+            passwordHash: hash(password), // Securely hash password
             name: finalName
         )
         
@@ -195,6 +210,13 @@ struct AuthView: View {
             // Provide user feedback for save failure
             errorMessage = "Unable to create account. Please try again."
         }
+    }
+
+    // Helper to securely hash passwords
+    private func hash(_ password: String) -> String {
+        let data = password.data(using: .utf8)!
+        let hashed = SHA256.hash(data: data)
+        return hashed.compactMap { String(format: "%02x", $0) }.joined()
     }
 }
 

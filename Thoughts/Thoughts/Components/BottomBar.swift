@@ -30,6 +30,7 @@ struct BottomBar: View {
                 HStack(spacing: 4) {
                     BarButton(
                         icon: "house",
+                        label: "Home",
                         isActive: activeTab == .home,
                         isPrimary: false,
                         action: onHome
@@ -41,6 +42,7 @@ struct BottomBar: View {
                     
                     BarButton(
                         icon: "pencil.line",
+                        label: "Create new note",
                         isActive: activeTab == .notes,
                         isPrimary: true,
                         action: onNewNote
@@ -52,6 +54,7 @@ struct BottomBar: View {
                     
                     BarButton(
                         icon: "gearshape",
+                        label: "Settings",
                         isActive: activeTab == .settings,
                         isPrimary: false,
                         action: onSettings
@@ -85,6 +88,7 @@ struct BottomBar: View {
                             .foregroundColor(activeTab == .search ? .ink : .ink.opacity(0.7))
                     }
                 }
+                .accessibilityLabel("Search")
                 .buttonStyle(ScaleButtonStyle())
             }
             .padding(.horizontal, 24)
@@ -95,6 +99,7 @@ struct BottomBar: View {
 
 struct BarButton: View {
     var icon: String
+    var label: String
     var isActive: Bool
     var isPrimary: Bool
     var action: () -> Void
@@ -133,6 +138,7 @@ struct BarButton: View {
                 }
             }
         }
+        .accessibilityLabel(label)
         .buttonStyle(ScaleButtonStyle())
     }
 }

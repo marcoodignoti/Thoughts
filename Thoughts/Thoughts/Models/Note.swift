@@ -40,9 +40,15 @@ final class Note {
         return String(content.prefix(100))
     }
     
-    var formattedDate: String {
+    // Bolt: Cache DateFormatter to avoid expensive recreation for each note (O(N) -> O(1) instantiation)
+    // This significantly improves scrolling performance in lists with many notes.
+    private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d, h:mm a"
-        return formatter.string(from: updatedAt)
+        return formatter
+    }()
+
+    var formattedDate: String {
+        return Self.dateFormatter.string(from: updatedAt)
     }
 }

@@ -40,9 +40,14 @@ final class Note {
         return String(content.prefix(100))
     }
     
-    var formattedDate: String {
+    // Cached formatter to avoid expensive initialization in list views
+    private static let noteDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d, h:mm a"
-        return formatter.string(from: updatedAt)
+        return formatter
+    }()
+
+    var formattedDate: String {
+        return Self.noteDateFormatter.string(from: updatedAt)
     }
 }

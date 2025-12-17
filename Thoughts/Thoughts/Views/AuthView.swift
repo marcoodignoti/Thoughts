@@ -17,6 +17,7 @@ struct AuthView: View {
     @State private var isLogin: Bool = true
     @State private var email: String = ""
     @State private var password: String = ""
+    @State private var showPassword: Bool = false
     @State private var name: String = ""
     @State private var errorMessage: String = ""
     @State private var isLoading: Bool = false
@@ -86,9 +87,27 @@ struct AuthView: View {
                             .textContentType(.emailAddress)
                             .autocapitalization(.none)
                         
-                        SecureField("Password", text: $password)
-                            .textFieldStyle(GlassTextFieldStyle())
-                            .textContentType(isLogin ? .password : .newPassword)
+                        ZStack(alignment: .trailing) {
+                            if showPassword {
+                                TextField("Password", text: $password)
+                                    .padding(.trailing, 48)
+                                    .textFieldStyle(GlassTextFieldStyle())
+                                    .textContentType(isLogin ? .password : .newPassword)
+                                    .autocapitalization(.none)
+                            } else {
+                                SecureField("Password", text: $password)
+                                    .padding(.trailing, 48)
+                                    .textFieldStyle(GlassTextFieldStyle())
+                                    .textContentType(isLogin ? .password : .newPassword)
+                            }
+
+                            Button(action: { showPassword.toggle() }) {
+                                Image(systemName: showPassword ? "eye.slash" : "eye")
+                                    .foregroundColor(.ink.opacity(0.4))
+                                    .padding(16)
+                            }
+                            .accessibilityLabel(showPassword ? "Hide password" : "Show password")
+                        }
                         
                         if !errorMessage.isEmpty {
                             Text(errorMessage)

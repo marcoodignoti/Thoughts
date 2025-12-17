@@ -35,6 +35,7 @@ struct FloatingActionButton: View {
             }
         }
         .buttonStyle(ScaleButtonStyle())
+        .accessibilityLabel("Create new note")
     }
 }
 

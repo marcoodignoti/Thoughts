@@ -40,9 +40,13 @@ final class Note {
         return String(content.prefix(100))
     }
     
-    var formattedDate: String {
+    private static let displayDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d, h:mm a"
-        return formatter.string(from: updatedAt)
+        return formatter
+    }()
+
+    var formattedDate: String {
+        return Self.displayDateFormatter.string(from: updatedAt)
     }
 }

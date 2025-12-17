@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import CryptoKit
+import Foundation
 
 struct AuthView: View {
     @Environment(\.modelContext) private var modelContext
@@ -165,16 +166,17 @@ struct AuthView: View {
     }
     
     private func performLogin() {
+        let cleanEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
         let hashed = hashPassword(password)
 
         // 1. Try secure login
-        if let user = users.first(where: { $0.email == email && $0.passwordHash == hashed }) {
+        if let user = users.first(where: { $0.email == cleanEmail && $0.passwordHash == hashed }) {
             viewModel.login(user: user)
             return
         }
 
         // 2. Legacy fallback (Lazy Migration)
-        if let user = users.first(where: { $0.email == email && $0.passwordHash == password }) {
+        if let user = users.first(where: { $0.email == cleanEmail && $0.passwordHash == password }) {
             user.passwordHash = hashed
             try? modelContext.save()
             viewModel.login(user: user)
@@ -185,16 +187,30 @@ struct AuthView: View {
     }
     
     private func performRegister() {
+        // Sentinel: Input Validation & Sanitization
+        let cleanEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
+        let cleanName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard isValidEmail(cleanEmail) else {
+            errorMessage = "Please enter a valid email address."
+            return
+        }
+
+        guard password.count >= 8 else {
+            errorMessage = "Password must be at least 8 characters."
+            return
+        }
+
         // Check if email already exists
-        if users.contains(where: { $0.email == email }) {
+        if users.contains(where: { $0.email == cleanEmail }) {
             errorMessage = "Email already in use"
             return
         }
         
-        let finalName = name.isEmpty ? (viewModel.onboardingName.isEmpty ? "Writer" : viewModel.onboardingName) : name
+        let finalName = cleanName.isEmpty ? (viewModel.onboardingName.isEmpty ? "Writer" : viewModel.onboardingName) : cleanName
         
         let newUser = User(
-            email: email,
+            email: cleanEmail,
             passwordHash: hashPassword(password),
             name: finalName
         )
@@ -214,6 +230,12 @@ struct AuthView: View {
         let inputData = Data(password.utf8)
         let hashed = SHA256.hash(data: inputData)
         return hashed.compactMap { String(format: "%02x", $0) }.joined()
+    }
+
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
+        return emailPred.evaluate(with: email)
     }
 }
 

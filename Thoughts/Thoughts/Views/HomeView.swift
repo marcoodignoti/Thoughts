@@ -14,10 +14,16 @@ struct HomeView: View {
     var notes: [Note]
     var notebooks: [Notebook]
     
-    private var currentDate: String {
+    // OPTIMIZATION: DateFormatter is expensive to initialize.
+    // Caching it in a static property prevents recreation on every render.
+    private static let headerDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE, MMMM d"
-        return formatter.string(from: Date())
+        return formatter
+    }()
+
+    private var currentDate: String {
+        return Self.headerDateFormatter.string(from: Date())
     }
     
     private var recentNotes: [Note] {

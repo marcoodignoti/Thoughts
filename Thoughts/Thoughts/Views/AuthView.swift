@@ -52,6 +52,7 @@ struct AuthView: View {
                                 .background(Color.black.opacity(0.05))
                                 .clipShape(Circle())
                         }
+                        .accessibilityLabel("Back to onboarding")
                         Spacer()
                     }
                     .padding(.horizontal, 24)

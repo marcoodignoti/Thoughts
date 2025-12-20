@@ -151,20 +151,41 @@ struct AuthView: View {
     
     private func handleSubmit() {
         errorMessage = ""
+
+        // Input Validation
+        let cleanEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
+        if cleanEmail.isEmpty || !isValidEmail(cleanEmail) {
+            errorMessage = "Please enter a valid email."
+            return
+        }
+
+        // We only check password length on registration to avoid locking out old users
+        // who might have weak passwords from before validation existed
+        if !isLogin && password.count < 8 {
+            errorMessage = "Password must be at least 8 characters."
+            return
+        }
+
         isLoading = true
         
         // Simulate network delay
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
             if isLogin {
-                performLogin()
+                performLogin(email: cleanEmail)
             } else {
-                performRegister()
+                performRegister(email: cleanEmail)
             }
             isLoading = false
         }
     }
     
-    private func performLogin() {
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailPred.evaluate(with: email)
+    }
+
+    private func performLogin(email: String) {
         let hashed = hashPassword(password)
 
         // 1. Try secure login
@@ -184,7 +205,7 @@ struct AuthView: View {
         errorMessage = "Invalid credentials"
     }
     
-    private func performRegister() {
+    private func performRegister(email: String) {
         // Check if email already exists
         if users.contains(where: { $0.email == email }) {
             errorMessage = "Email already in use"

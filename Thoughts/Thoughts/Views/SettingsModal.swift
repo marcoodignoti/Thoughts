@@ -39,6 +39,7 @@ struct SettingsModal: View {
                             .background(Color.black.opacity(0.05))
                             .clipShape(Circle())
                     }
+                    .accessibilityLabel("Close settings")
                 }
                 
                 // User Card

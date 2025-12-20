@@ -52,6 +52,7 @@ struct AuthView: View {
                                 .background(Color.black.opacity(0.05))
                                 .clipShape(Circle())
                         }
+                        .accessibilityLabel("Back to onboarding")
                         Spacer()
                     }
                     .padding(.horizontal, 24)
@@ -81,12 +82,14 @@ struct AuthView: View {
                         }
                         
                         TextField("Email", text: $email)
+                            .accessibilityLabel("Email address")
                             .textFieldStyle(GlassTextFieldStyle())
                             .keyboardType(.emailAddress)
                             .textContentType(.emailAddress)
                             .autocapitalization(.none)
                         
                         SecureField("Password", text: $password)
+                            .accessibilityLabel("Password")
                             .textFieldStyle(GlassTextFieldStyle())
                             .textContentType(isLogin ? .password : .newPassword)
                         

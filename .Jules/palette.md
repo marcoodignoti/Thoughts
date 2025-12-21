@@ -1,3 +1,3 @@
-## 2024-05-22 - Missing Accessibility on Icon-Only Buttons
-**Learning:** Icon-only buttons in custom navigation components (`BottomBar`) were completely invisible to screen readers because they relied solely on visual icons without `accessibilityLabel` or `accessibilityHint`.
-**Action:** When creating custom navigation components, always enforce `accessibilityLabel` as a required property in the button configuration struct (like `BarButton`), rather than relying on the consumer to remember to add the modifier. This makes accessibility "built-in" rather than "bolted-on".
+## 2024-05-23 - [Icon-Only Buttons Accessibility]
+**Learning:** Icon-only buttons (like 'Back' arrows or 'Close' x-marks) are visually clear to sighted users but are invisible traps for screen reader users if they lack `accessibilityLabel`. The default behavior often reads the system image name (e.g., "arrow.left") or just "Button", which provides poor context.
+**Action:** Always attach `.accessibilityLabel("Description")` to any button that relies solely on `Image(systemName: ...)` for its content. The label should describe the *action* (e.g., "Close settings", "Back to onboarding"), not the icon.

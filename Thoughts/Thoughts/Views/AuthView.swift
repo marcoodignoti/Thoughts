@@ -5,6 +5,7 @@
 //  Authentication screen for login/register
 //
 
+import Foundation
 import SwiftUI
 import SwiftData
 import CryptoKit
@@ -151,6 +152,15 @@ struct AuthView: View {
     
     private func handleSubmit() {
         errorMessage = ""
+
+        // Trim whitespace from email
+        email = email.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // Validate inputs
+        if !validateInput() {
+            return
+        }
+
         isLoading = true
         
         // Simulate network delay
@@ -162,6 +172,36 @@ struct AuthView: View {
             }
             isLoading = false
         }
+    }
+
+    private func validateInput() -> Bool {
+        if email.isEmpty {
+            errorMessage = "Email is required"
+            return false
+        }
+
+        // Strict email validation
+        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        if !emailPredicate.evaluate(with: email) {
+            errorMessage = "Invalid email format"
+            return false
+        }
+
+        if password.isEmpty {
+            errorMessage = "Password is required"
+            return false
+        }
+
+        // Registration-specific checks
+        if !isLogin {
+            if password.count < 8 {
+                errorMessage = "Password must be at least 8 characters"
+                return false
+            }
+        }
+
+        return true
     }
     
     private func performLogin() {

@@ -116,6 +116,7 @@ struct HomeView: View {
                         .background(Color.black.opacity(0.05))
                         .clipShape(Circle())
                 }
+                .accessibilityLabel("Create new notebook")
             }
             .padding(.horizontal, 24)
             

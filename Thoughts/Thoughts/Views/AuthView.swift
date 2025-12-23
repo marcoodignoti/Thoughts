@@ -164,17 +164,28 @@ struct AuthView: View {
         }
     }
     
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailPred.evaluate(with: email)
+    }
+
+    private func isValidPassword(_ password: String) -> Bool {
+        return password.count >= 8
+    }
+
     private func performLogin() {
+        let cleanEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
         let hashed = hashPassword(password)
 
         // 1. Try secure login
-        if let user = users.first(where: { $0.email == email && $0.passwordHash == hashed }) {
+        if let user = users.first(where: { $0.email == cleanEmail && $0.passwordHash == hashed }) {
             viewModel.login(user: user)
             return
         }
 
         // 2. Legacy fallback (Lazy Migration)
-        if let user = users.first(where: { $0.email == email && $0.passwordHash == password }) {
+        if let user = users.first(where: { $0.email == cleanEmail && $0.passwordHash == password }) {
             user.passwordHash = hashed
             try? modelContext.save()
             viewModel.login(user: user)
@@ -185,8 +196,21 @@ struct AuthView: View {
     }
     
     private func performRegister() {
+        let cleanEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // Input validation
+        if !isValidEmail(cleanEmail) {
+            errorMessage = "Please enter a valid email address"
+            return
+        }
+
+        if !isValidPassword(password) {
+            errorMessage = "Password must be at least 8 characters"
+            return
+        }
+
         // Check if email already exists
-        if users.contains(where: { $0.email == email }) {
+        if users.contains(where: { $0.email == cleanEmail }) {
             errorMessage = "Email already in use"
             return
         }
@@ -194,7 +218,7 @@ struct AuthView: View {
         let finalName = name.isEmpty ? (viewModel.onboardingName.isEmpty ? "Writer" : viewModel.onboardingName) : name
         
         let newUser = User(
-            email: email,
+            email: cleanEmail,
             passwordHash: hashPassword(password),
             name: finalName
         )

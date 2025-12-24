@@ -14,10 +14,9 @@ struct HomeView: View {
     var notes: [Note]
     var notebooks: [Notebook]
     
+    // Optimization: Use shared static DateFormatter to avoid expensive initialization
     private var currentDate: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, MMMM d"
-        return formatter.string(from: Date())
+        return DateFormatter.homeDisplayFormatter.string(from: Date())
     }
     
     private var recentNotes: [Note] {

@@ -43,6 +43,7 @@ struct SearchOverlay: View {
                             .font(.body.weight(.medium))
                             .foregroundColor(.ink)
                             .focused($isSearchFocused)
+                            .submitLabel(.search)
                         
                         if !query.isEmpty {
                             Button(action: { query = "" }) {
@@ -50,6 +51,7 @@ struct SearchOverlay: View {
                                     .font(.body)
                                     .foregroundColor(.ink.opacity(0.3))
                             }
+                            .accessibilityLabel("Clear search")
                         }
                     }
                     .padding(16)

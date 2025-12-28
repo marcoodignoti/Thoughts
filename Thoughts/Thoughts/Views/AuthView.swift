@@ -151,6 +151,32 @@ struct AuthView: View {
     
     private func handleSubmit() {
         errorMessage = ""
+
+        // 🛡️ Sentinel: Input Validation
+        let trimmedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
+        email = trimmedEmail
+
+        if trimmedEmail.isEmpty {
+            errorMessage = "Please enter your email."
+            return
+        }
+
+        if !isValidEmail(trimmedEmail) {
+            errorMessage = "Please enter a valid email address."
+            return
+        }
+
+        if password.isEmpty {
+            errorMessage = "Please enter your password."
+            return
+        }
+
+        // Enforce minimum password length for new accounts
+        if !isLogin && password.count < 8 {
+            errorMessage = "Password must be at least 8 characters."
+            return
+        }
+
         isLoading = true
         
         // Simulate network delay
@@ -162,6 +188,12 @@ struct AuthView: View {
             }
             isLoading = false
         }
+    }
+
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailPred.evaluate(with: email)
     }
     
     private func performLogin() {

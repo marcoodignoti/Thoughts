@@ -1,3 +1,3 @@
-## 2024-05-22 - Missing Accessibility on Icon-Only Buttons
-**Learning:** Icon-only buttons in custom navigation components (`BottomBar`) were completely invisible to screen readers because they relied solely on visual icons without `accessibilityLabel` or `accessibilityHint`.
-**Action:** When creating custom navigation components, always enforce `accessibilityLabel` as a required property in the button configuration struct (like `BarButton`), rather than relying on the consumer to remember to add the modifier. This makes accessibility "built-in" rather than "bolted-on".
+## 2024-05-24 - Accessibility Gaps in Overlay Views
+**Learning:** Auxiliary actions like "Clear search" in `SearchOverlay` and "Close" in `SettingsModal` often get missed during accessibility audits because they appear dynamically or are secondary to the main flow. These icon-only buttons are unusable for screen reader users without explicit labels.
+**Action:** When reviewing overlay or modal views, specifically hunt for `xmark` or clear/close icons and verify they have an `.accessibilityLabel`.

@@ -185,8 +185,21 @@ struct AuthView: View {
     }
     
     private func performRegister() {
+        // Input validation
+        let cleanEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard isValidEmail(cleanEmail) else {
+            errorMessage = "Please enter a valid email address"
+            return
+        }
+
+        guard password.count >= 8 else {
+            errorMessage = "Password must be at least 8 characters"
+            return
+        }
+
         // Check if email already exists
-        if users.contains(where: { $0.email == email }) {
+        if users.contains(where: { $0.email == cleanEmail }) {
             errorMessage = "Email already in use"
             return
         }
@@ -194,7 +207,7 @@ struct AuthView: View {
         let finalName = name.isEmpty ? (viewModel.onboardingName.isEmpty ? "Writer" : viewModel.onboardingName) : name
         
         let newUser = User(
-            email: email,
+            email: cleanEmail,
             passwordHash: hashPassword(password),
             name: finalName
         )
@@ -214,6 +227,12 @@ struct AuthView: View {
         let inputData = Data(password.utf8)
         let hashed = SHA256.hash(data: inputData)
         return hashed.compactMap { String(format: "%02x", $0) }.joined()
+    }
+
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailPred.evaluate(with: email)
     }
 }
 

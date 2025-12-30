@@ -94,6 +94,9 @@ struct HomeView: View {
                     .font(.subheadline.weight(.bold))
                     .foregroundColor(.ink.opacity(0.6))
             }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("User profile: \(user.firstName)")
+            .accessibilityAddTraits(.isHeader)
         }
         .padding(.horizontal, 24)
         .padding(.top, 60)
@@ -116,6 +119,7 @@ struct HomeView: View {
                         .background(Color.black.opacity(0.05))
                         .clipShape(Circle())
                 }
+                .accessibilityLabel("Create new notebook")
             }
             .padding(.horizontal, 24)
             

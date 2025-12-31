@@ -50,6 +50,7 @@ struct SearchOverlay: View {
                                     .font(.body)
                                     .foregroundColor(.ink.opacity(0.3))
                             }
+                            .accessibilityLabel("Clear search")
                         }
                     }
                     .padding(16)

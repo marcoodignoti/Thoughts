@@ -14,10 +14,26 @@ struct HomeView: View {
     var notes: [Note]
     var notebooks: [Notebook]
     
-    private var currentDate: String {
+    // ⚡ Bolt: Cache DateFormatter to avoid expensive recreation on every render
+    private static let headerDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE, MMMM d"
-        return formatter.string(from: Date())
+        return formatter
+    }()
+
+    private var currentDate: String {
+        return Self.headerDateFormatter.string(from: Date())
+    }
+
+    // ⚡ Bolt: Pre-calculate note counts to avoid O(N*M) filtering in view body
+    private func getNoteCounts() -> [UUID: Int] {
+        var counts = [UUID: Int]()
+        for note in notes {
+            if let id = note.notebookId {
+                counts[id, default: 0] += 1
+            }
+        }
+        return counts
     }
     
     private var recentNotes: [Note] {
@@ -25,7 +41,9 @@ struct HomeView: View {
     }
     
     var body: some View {
-        ZStack {
+        let noteCounts = getNoteCounts()
+
+        return ZStack {
             Color.paper
                 .ignoresSafeArea()
             
@@ -35,7 +53,7 @@ struct HomeView: View {
                     headerView
                     
                     // Notebooks Section
-                    notebooksSection
+                    notebooksSection(counts: noteCounts)
                     
                     // Recent Thoughts Section
                     recentThoughtsSection
@@ -99,7 +117,7 @@ struct HomeView: View {
         .padding(.top, 60)
     }
     
-    private var notebooksSection: some View {
+    private func notebooksSection(counts: [UUID: Int]) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Text("Notebooks")
@@ -146,7 +164,7 @@ struct HomeView: View {
                     ForEach(notebooks) { notebook in
                         NotebookCard(
                             notebook: notebook,
-                            noteCount: notes.filter { $0.notebookId == notebook.id }.count,
+                            noteCount: counts[notebook.id] ?? 0,
                             action: { viewModel.openNotebook(id: notebook.id) }
                         )
                     }

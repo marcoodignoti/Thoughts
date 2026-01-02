@@ -94,6 +94,8 @@ struct HomeView: View {
                     .font(.subheadline.weight(.bold))
                     .foregroundColor(.ink.opacity(0.6))
             }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("User profile: \(user.firstName)")
         }
         .padding(.horizontal, 24)
         .padding(.top, 60)
@@ -116,6 +118,7 @@ struct HomeView: View {
                         .background(Color.black.opacity(0.05))
                         .clipShape(Circle())
                 }
+                .accessibilityLabel("Create new notebook")
             }
             .padding(.horizontal, 24)
             
@@ -141,6 +144,7 @@ struct HomeView: View {
                                 )
                         )
                     }
+                    .accessibilityLabel("Create new notebook")
                     
                     // Notebook Cards
                     ForEach(notebooks) { notebook in

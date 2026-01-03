@@ -1,0 +1,3 @@
+## 2024-05-23 - SwiftUI Computed Property Traps
+**Learning:** In SwiftUI, accessing a computed property (e.g., `var counts: [UUID: Int] { ... }`) inside a `ForEach` loop re-evaluates the property for *every* iteration. This negates the benefit of pre-calculation if the property is computed on the struct itself rather than being a stored variable or calculated once.
+**Action:** When pre-calculating data for a loop in a SwiftUI View, calculate it once in a local variable at the start of the `body` (e.g., `let counts = noteCounts`) or use a ViewModel. If using a local variable, pass it as an argument to helper functions/views.

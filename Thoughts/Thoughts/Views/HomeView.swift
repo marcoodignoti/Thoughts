@@ -14,10 +14,15 @@ struct HomeView: View {
     var notes: [Note]
     var notebooks: [Notebook]
     
-    private var currentDate: String {
+    // Cache the DateFormatter to avoid expensive re-creation on every render
+    private static let headerDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE, MMMM d"
-        return formatter.string(from: Date())
+        return formatter
+    }()
+
+    private var currentDate: String {
+        return Self.headerDateFormatter.string(from: Date())
     }
     
     private var recentNotes: [Note] {
@@ -25,7 +30,10 @@ struct HomeView: View {
     }
     
     var body: some View {
-        ZStack {
+        // Pre-calculate note counts to avoid O(N*M) complexity in the loop
+        let noteCounts = Dictionary(grouping: notes, by: { $0.notebookId }).mapValues { $0.count }
+
+        return ZStack {
             Color.paper
                 .ignoresSafeArea()
             
@@ -146,7 +154,7 @@ struct HomeView: View {
                     ForEach(notebooks) { notebook in
                         NotebookCard(
                             notebook: notebook,
-                            noteCount: notes.filter { $0.notebookId == notebook.id }.count,
+                            noteCount: noteCounts[notebook.id] ?? 0,
                             action: { viewModel.openNotebook(id: notebook.id) }
                         )
                     }

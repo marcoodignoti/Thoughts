@@ -77,6 +77,7 @@ struct OnboardingView: View {
                                 .foregroundColor(.paper)
                         }
                     }
+                    .accessibilityLabel(step == 0 ? "Next step" : "Finish onboarding")
                     .disabled(step == 1 && name.trimmingCharacters(in: .whitespaces).isEmpty)
                     .opacity(step == 1 && name.trimmingCharacters(in: .whitespaces).isEmpty ? 0.5 : 1)
                 }

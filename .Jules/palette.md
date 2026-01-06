@@ -1,3 +1,7 @@
-## 2024-05-22 - Missing Accessibility on Icon-Only Buttons
-**Learning:** Icon-only buttons in custom navigation components (`BottomBar`) were completely invisible to screen readers because they relied solely on visual icons without `accessibilityLabel` or `accessibilityHint`.
-**Action:** When creating custom navigation components, always enforce `accessibilityLabel` as a required property in the button configuration struct (like `BarButton`), rather than relying on the consumer to remember to add the modifier. This makes accessibility "built-in" rather than "bolted-on".
+## 2024-05-23 - Interactive Card Accessibility
+**Learning:** Complex interactive cards (like `NotebookCard`) composed of multiple text/image elements often result in fragmented VoiceOver experiences (reading "Folder", then "Name", then "Count" separately).
+**Action:** Use `.accessibilityElement(children: .ignore)` (or implicit via Button) and provide a single, comprehensive `.accessibilityLabel` (e.g., "Notebook: [Name], [Count] thoughts") to create a cohesive and efficient user experience.
+
+## 2024-05-23 - Icon-Only Button Labels
+**Learning:** Icon-only buttons (common in headers, modals, search fields) are frequently missed during accessibility sweeps, resulting in "Button" or "xmark" being announced.
+**Action:** Establish a mandatory check for `.accessibilityLabel` on all `Image(systemName: ...)` based buttons during development and code review.

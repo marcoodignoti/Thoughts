@@ -116,6 +116,7 @@ struct HomeView: View {
                         .background(Color.black.opacity(0.05))
                         .clipShape(Circle())
                 }
+                .accessibilityLabel("Create new notebook")
             }
             .padding(.horizontal, 24)
             
@@ -141,6 +142,7 @@ struct HomeView: View {
                                 )
                         )
                     }
+                    .accessibilityLabel("Create new notebook")
                     
                     // Notebook Cards
                     ForEach(notebooks) { notebook in

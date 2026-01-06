@@ -61,6 +61,7 @@ struct NotebookCard: View {
             )
         }
         .buttonStyle(ScaleButtonStyle())
+        .accessibilityLabel("Notebook: \(notebook.name), \(noteCount) \(noteCount == 1 ? "thought" : "thoughts")")
     }
 }
 

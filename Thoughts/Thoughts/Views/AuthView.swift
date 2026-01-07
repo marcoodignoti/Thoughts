@@ -185,6 +185,17 @@ struct AuthView: View {
     }
     
     private func performRegister() {
+        // Validation
+        if !isValidEmail(email) {
+            errorMessage = "Please enter a valid email address"
+            return
+        }
+
+        if password.count < 8 {
+            errorMessage = "Password must be at least 8 characters"
+            return
+        }
+
         // Check if email already exists
         if users.contains(where: { $0.email == email }) {
             errorMessage = "Email already in use"
@@ -208,6 +219,12 @@ struct AuthView: View {
             // Provide user feedback for save failure
             errorMessage = "Unable to create account. Please try again."
         }
+    }
+
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
+        return emailPred.evaluate(with: email)
     }
 
     private func hashPassword(_ password: String) -> String {

@@ -14,10 +14,24 @@ struct HomeView: View {
     var notes: [Note]
     var notebooks: [Notebook]
     
-    private var currentDate: String {
+    // Cached date formatter to avoid repeated initialization (Performance optimization)
+    private static let headerDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE, MMMM d"
-        return formatter.string(from: Date())
+        return formatter
+    }()
+
+    private var currentDate: String {
+        return Self.headerDateFormatter.string(from: Date())
+    }
+
+    // O(N) calculation of note counts per notebook
+    private var noteCounts: [UUID: Int] {
+        notes.reduce(into: [:]) { counts, note in
+            if let id = note.notebookId {
+                counts[id, default: 0] += 1
+            }
+        }
     }
     
     private var recentNotes: [Note] {
@@ -143,10 +157,11 @@ struct HomeView: View {
                     }
                     
                     // Notebook Cards
+                    let counts = noteCounts
                     ForEach(notebooks) { notebook in
                         NotebookCard(
                             notebook: notebook,
-                            noteCount: notes.filter { $0.notebookId == notebook.id }.count,
+                            noteCount: counts[notebook.id] ?? 0,
                             action: { viewModel.openNotebook(id: notebook.id) }
                         )
                     }

@@ -21,7 +21,8 @@ struct HomeView: View {
     }
     
     private var recentNotes: [Note] {
-        notes.sorted { $0.updatedAt > $1.updatedAt }
+        // Notes are already sorted by the Query in ContentView
+        notes
     }
     
     var body: some View {

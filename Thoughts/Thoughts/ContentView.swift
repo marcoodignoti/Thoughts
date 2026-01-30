@@ -13,7 +13,7 @@ struct ContentView: View {
     @State private var viewModel = AppViewModel()
     
     @Query private var users: [User]
-    @Query private var notes: [Note]
+    @Query(sort: \Note.updatedAt, order: .reverse) private var notes: [Note]
     @Query private var notebooks: [Notebook]
     
     var body: some View {
